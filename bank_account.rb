@@ -59,6 +59,9 @@ def wait(balance, loan)
     loan.each { |i|
       ((days / 30).floor).times do
         i.amount = i.amount - i.monthly
+        if i.amount <= 0
+          loan.delete(i)
+        end
         new_balance = new_balance - i.monthly
         end
     }
