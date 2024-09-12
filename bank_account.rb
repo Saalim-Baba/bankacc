@@ -43,9 +43,18 @@ def withdraw(balance)
 end
 
 def wait(balance, loan)
+  """
+  waiting a certain amount of days to get interest
+  function calculates accrued interest and pays off the loan if there's one
+
+  """
   interest = 3.7
   puts "How many days do you want to wait? "
   days = gets.chomp.to_i
+  if days <= 0
+    puts "You cannot wait negative days!"
+    return balance
+  end
   interest_accrued = (days * ((balance * (interest / 100)) / 365)).round(2)
   new_balance = balance + interest_accrued
   puts "--------------------\nInterest accrued: #{interest_accrued}$\nNew Balance: #{new_balance}$\n--------------------"
@@ -57,6 +66,7 @@ def wait(balance, loan)
         if i.amount <= i.monthly
           new_balance -= i.amount
           puts "Loan ID #{i.instance_variable_get(:@id)} fully paid off!"
+          # wanted to try instance_variable_get function here instead of attr_accessor
           loan.delete(i)
           break
         else
@@ -70,14 +80,19 @@ def wait(balance, loan)
 end
 
 def loans(loan)
+  """
+  function to take out a loan
+  creates new object and adds to already existing array called loan
+  """
   puts "Interest is 10%\nWhat loan amount do you want to take out? "
-  new_loan = Loan.new(gets.chomp.to_i, loan)
+  amount = gets.chomp.to_i
+  if amount <= 0
+    puts "Cannot grant loan that is negative or zero"
+    return loan
+  end
+  new_loan = Loan.new(amount, loan)
   loan << new_loan
-end
-
-def pay_loan(loan, id)
-  puts id
-  puts loan[id - 1]
+  #This is a new concept for me: << is to add at the end of array
 end
 
 while choice
